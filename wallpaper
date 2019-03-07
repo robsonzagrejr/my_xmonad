@@ -1,0 +1,41 @@
+# Uses xwinwrap to display given animated .gif in the center of the screen
+killall xwinwrap
+
+if [[ $(file --mime-type -b "$1") == image/gif ]]; then 
+  #echo Is a Gif
+  WALLPAPER=$1
+
+  #get screen resolution
+  SCRW=`xrandr | awk '/current/ { print $8 }'`
+  SCRH=`xrandr | awk '/current/ { print $10 }'`
+  SCRH=${SCRH%\,}
+
+  #get gif resolution
+  IMGHW=`gifsicle --info $1 | awk '/logical/ { print $3 }'`
+  IMGH=${IMGHW#*x}
+  IMGW=${IMGHW%x*}
+
+
+  #echo ${IMGH}
+  #echo ${IMGW}
+  #echo ${SCRH}
+  #echo ${SCRW}
+
+  if [ $IMGH != $SCRH ] || [ $IMGW != $SCRW ]; then
+      gifsicle --resize ${SCRW}x${SCRH} -i $1 > /tmp/wallpaper.gif
+      WALLPAPER="/tmp/wallpaper.gif"
+      echo Make Aux
+  else
+      rm /tmp/wallpaper.gif
+  fi
+
+  #echo ${WALLPAPER}
+
+  #xwinwrap -o 1 -ovr -ni -fdt -fs -un -s -- gifview -w WID $WALLPAPER -a
+  xwinwrap -b -s -fs -st -sp -nf -ovr -fdt -- gifview -w WID $WALLPAPER -a --memory-limit 1 --no-interactive
+else
+  #echo Is Other
+  feh --bg-scale $1
+fi
+
+exit 0
