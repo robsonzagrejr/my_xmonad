@@ -1,0 +1,8 @@
+!! URXVT Settings:
+URxvt*background: #000000
+URxvt*border: #000000
+URxvt*color12: #FF4262
+URxvt*foreground: #eeeeee
+URxvt*font: xft:Hermit:size=11
+URxvt*scrollBar: false
+URxvt.perl-ext-common: default,config-reload
